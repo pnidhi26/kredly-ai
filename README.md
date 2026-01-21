@@ -13,15 +13,6 @@ short_description: Document Intelligence using RAG with OCR, conflict detection
 ### Klaro — powered by Kredly Document Intelligence
 
 ## Overview
-Kredly AI is a SaaS-grad, open-source **Document Intelligence platform** built using Retrieval-Augmented Generation (RAG).
-
-It allows users to upload unstructured documents (PDFs, images, text) and ask natural language questions with **evidence-backed, explainable answers**.
-
-# Kredly AI
-### Klaro — powered by Kredly AI Document Intelligence
-
-
-## Overview
 
 A free, open-source document intelligence system using Retrieval Augmented Generation (RAG) with OCR, conflict detection, and confidence scoring.
 
@@ -31,7 +22,6 @@ Unlike typical RAG solutions, Klaro App is designed for correctness, transparenc
 
 
 ## ✨ Key Features
-
 - 📄 Multi-format document ingestion (PDF, Image, TXT)
 - 🔍 Semantic search using vector embeddings (ChromaDB)
 - 🧠 Retrieval-Augmented Generation (RAG) with strict grounding
@@ -51,6 +41,7 @@ Most RAG systems answer confidently even when documents:
 Kredly AI was built to surface uncertainty instead of hiding it.
 
 ## 🏗️ Architecture Overview
+```bash
 Document → OCR → Chunking → Embeddings → Vector DB → Retrieval → Prompt Injection → LLM Answer
 
 Upload Docs → OCR / Parsing → Chunking → Embeddings
@@ -62,6 +53,7 @@ User Question
 Retrieval → Reasoning → Conflict Detection
       ↓
 Answer + Confidence + Sources + Explanation
+```
 
 ## 🎯 Use Cases
 - Fintech & compliance policy analysis
@@ -78,10 +70,8 @@ klaro-ai/
 ├── Dockerfile                 # Deployment config (Hugging Face / Docker)
 ├── run.sh                     # Startup script for Spaces
 ├── README.md                  # Project documentation
-
 ├── app/
 │   ├── __init__.py
-<<<<<<< HEAD
 │   ├── ui.py                  # Main UI orchestration
 │   ├── ui_components.py       # Reusable UI blocks
 │   ├── rag_pipeline.py        # Core RAG logic
@@ -127,17 +117,14 @@ Answer + Confidence + Explanation + Sources
 
 ```
 
-### Tech Stack
-- Python
-- Streamlit
-- Hugging Face Transformers
-- Sentence Transformers
-- ChromaDB
-- Tesseract OCR
-- pdfplumber
-
-### Workflow
-Document → OCR → Chunking → Embeddings → Vector DB → Retrieval → Prompt Injection → LLM Answer
+### 🚀 Tech Stack
+- Frontend: Streamlit (custom dark theme)
+- LLM: Open-source Hugging Face models
+- Vector DB: ChromaDB
+- OCR: Tesseract
+- PDF Parsing: pdfplumber
+- Explainability: Custom scoring + attribution logic
+- Deployment: Hugging Face Spaces
 
 ### How to run application:
 
@@ -152,64 +139,6 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-│
-│   ├── ui.py   # Main UI orchestration (page flow)
-│   ├── ui_components.py # Reusable UI blocks (answer, sources explainability)
-│   ├── styles/
-│   │   └── dark.css           # Centralized dark theme + green accents
-│
-│   ├── ingestion.py           # File ingestion (PDF, OCR, text)
-│   ├── chunking.py            # Text chunking logic
-│   ├── extraction.py          # Structured data extraction (policies, numbers)
-│   ├── reasoning.py           # Rule-based / numerical reasoning
-│
-│   ├── vector_store.py        # Embedding + ChromaDB integration
-│   ├── rag_pipeline.py        # Retrieval-Augmented Generation logic
-│   ├── conflict_detection.py  # Cross-document conflict detection
-│   ├── consensus.py           # Multi-source consensus scoring
-│
-│   ├── export.py              # PDF export for answers
-│   └── utils.py               # Shared helpers (confidence labels, formatting)
-│
-├── models/
-│   └── embeddings/            # Local or cached embedding models
-│
-├── data/
-│   └── samples/               # Sample documents for testing/demo
-│
-├── scripts/
-│   ├── setup_env.sh           # Local setup helpers
-│   └── reset_index.py         # Vector DB maintenance utilities
-│
-└── venv/                      # Local virtual environment (gitignored)
-
-```
-
-## Overview
-
-
-### 🚀 Tech Stack
-- Frontend: Streamlit (custom dark theme)
-- LLM: Open-source Hugging Face models
-- Vector DB: ChromaDB
-- OCR: Tesseract
-- PDF Parsing: pdfplumber
-- Explainability: Custom scoring + attribution logic
-- Deployment: Hugging Face Spaces
-
-### Run
-Direct Use Link:
-```bash
-https://huggingface.co/spaces/pnidhi26/kredly-ai
-```
-
-Run on local system:
-```bash
-source venv/bin/activate
-pip install -r requirements.txt
-streamlit run main.py
-```
-
 ### 📄 Export
 Answers can be exported as a PDF including:
 - Question
@@ -219,7 +148,6 @@ Answers can be exported as a PDF including:
 
 ### 📌 Status
 Actively evolving. Built as a learning-by-doing deep dive into RAG systems done right.
->>>>>>> 93d8e06 (Add reportlab for PDF export)
 
 ## Author
 **Prakash Nidhi Verma**
