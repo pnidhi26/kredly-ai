@@ -1,5 +1,36 @@
-# kredly-ai
+---
+title: Kredly Ai
+emoji: 👀
+colorFrom: red
+colorTo: gray
+sdk: docker
+pinned: false
+license: mit
+short_description: Document Intelligence using RAG with OCR, conflict detection
+---
+
+# Kredly AI
 ### Klaro — powered by Kredly Document Intelligence
+
+## Overview
+Kredly AI is a SaaS-grad, open-source **Document Intelligence platform** built using Retrieval-Augmented Generation (RAG).
+
+It allows users to upload unstructured documents (PDFs, images, text) and ask natural language questions with **evidence-backed, explainable answers**.
+
+Unlike basic RAG demos, Kredly AI prioritizes:
+- correctness over fluency
+- explicit uncertainty
+- multi-document conflict detection
+
+## Key Features
+- 📄 OCR for PDFs and images
+- 🔍 Semantic search using vector embeddings
+- 🧠 Grounded question answering (RAG)
+- 📊 Confidence scoring based on semantic similarity
+- ⚠️ Conflict detection across documents
+- 🧾 Explainability (“Why this answer?”)
+- 📤 Export answers as PDF
+- 💻 Fully free and open-source (no paid APIs)
 
 ---
 ## Project Structure
@@ -8,56 +39,79 @@ klaro-ai/
 │
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                # Streamlit entry point
-│   ├── ui.py                  # UI layout and components
+│   ├── ui.py                  # Main UI orchestration
+│   ├── ui_components.py       # Reusable UI blocks
 │   ├── rag_pipeline.py        # Core RAG logic
 │   ├── ingestion.py           # File ingestion + OCR
 │   ├── chunking.py            # Text chunking logic
-│   ├── embeddings.py          # Embedding model wrapper
-│   ├── vector_store.py        # Chroma DB logic
-│   └── prompts.py             # RAG prompts
+│   ├── extraction.py          # Structured extraction
+│   ├── reasoning.py           # Numerical / rule-based reasoning
+│   ├── vector_store.py        # ChromaDB integration
+│   ├── conflict_detection.py  # Cross-document conflict detection
+│   ├── consensus.py           # Multi-document consensus logic
+│   ├── export.py              # PDF export
+│   ├── prompts.py             # RAG prompts
+│   └── styles/
+│       └── theme.css          # Dark UI theme
 │
 ├── data/
-│   ├── uploads/               # Uploaded raw files
 │   └── chroma/                # Local vector DB
 │
-├── models/
-│   └── README.md              # Model choices and notes
-│
-├── scripts/
-│   └── reset_db.py            # Utility to reset vector DB
-│
 ├── requirements.txt
-├── README.md
-├── .gitignore
-└── run.sh
+├── app.py                     # Streamlit entry point
+├── run.sh
+├── Dockerfile
+└── README.md
+```
+
+## System Workflow
+```bash
+Document Upload
+   ↓
+OCR / Parsing
+   ↓
+Chunking + Embeddings
+   ↓
+Vector Database (ChromaDB)
+   ↓
+Retrieval
+   ↓
+Reasoning + Conflict Detection
+   ↓
+RAG Answer Generation
+   ↓
+Answer + Confidence + Explanation + Sources
 
 ```
----
-## Overview
-A free, open-source document intelligence system using Retrieval Augmented Generation (RAG).
-
-### Features
-- OCR for PDFs and images
-- Semantic search using vector embeddings
-- Grounded question answering
-- Local-first, no paid APIs
-
-### Workflow
-Document → OCR → Chunking → Embeddings → Vector DB → Retrieval → Prompt Injection → LLM Answer
 
 ### Tech Stack
 - Python
 - Streamlit
+- Hugging Face Transformers
 - Sentence Transformers
 - ChromaDB
-- HuggingFace Transformers
+- Tesseract OCR
+- pdfplumber
 
-### Run
+### Workflow
+Document → OCR → Chunking → Embeddings → Vector DB → Retrieval → Prompt Injection → LLM Answer
+
+### How to run application:
+
+Run Direct link: 
+```bash
+https://huggingface.co/spaces/pnidhi26/kredly-ai
+```
+Run Locally
+```bash
 source venv/bin/activate
 pip install -r requirements.txt
-streamlit run main.py
+streamlit run app.py
+```
 
 --- 
 ## Author
 **Prakash Nidhi Verma**
+
+
+
