@@ -1,0 +1,10 @@
+streamlit
+chromadb
+sentence-transformers
+transformers
+torch
+pdfplumber
+pillow
+pytesseract
+numpy
+scikit-learn
