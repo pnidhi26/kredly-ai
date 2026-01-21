@@ -1,3 +1,4 @@
+<!--
 ---
 title: Kredly Ai
 emoji: 👀
@@ -8,6 +9,7 @@ pinned: false
 license: mit
 short_description: Document Intelligence using RAG with OCR, conflict detection
 ---
+-->
 
 # Kredly AI
 ### Klaro — powered by Kredly Document Intelligence
@@ -138,6 +140,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
+## Demo
+- Upload a policy document
+- Ask natural language questions
+- See grounded answers with confidence and sources
+- Export answers as PDF
 
 ### 📄 Export
 Answers can be exported as a PDF including:
