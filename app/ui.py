@@ -4,115 +4,118 @@ from .ingestion import ingest_files
 from .rag_pipeline import answer_question
 from .reasoning import answer_numerical_question
 from .conflict_detection import detect_refund_conflict
+from .consensus import compute_consensus
+from .export import export_answer_pdf
+
+from .ui_components import (
+    render_answer,
+    render_sources,
+    render_why_answer
+)
 
 
-# ---------------- Session state ----------------
+# ---------- Session State ----------
 if "structured_data" not in st.session_state:
     st.session_state["structured_data"] = []
 
+if "chat_history" not in st.session_state:
+    st.session_state["chat_history"] = []
 
-def confidence_label(distance: float) -> str:
+if "enabled_files" not in st.session_state:
+    st.session_state["enabled_files"] = {}
+
+
+def confidence_label(distance):
     if distance <= 0.3:
         return "High"
     elif distance <= 0.6:
         return "Medium"
-    else:
-        return "Low"
+    return "Low"
 
+
+def load_css():
+    with open("app/styles/theme.css") as f:
+        st.markdown("<hr style='border-color:#222;'>", unsafe_allow_html=True)
 
 def render_ui():
-    st.title("Kredly AI")
-    st.caption("Document Intelligence with RAG")
+    load_css()
 
-    # ---------------- Sidebar ----------------
+    st.title("Kredly AI")
+    st.caption("Startup-grade Document Intelligence")
+
+    # ---------- Sidebar ----------
     with st.sidebar:
-        st.header("Upload documents")
+        st.header("Documents")
 
         files = st.file_uploader(
-            "PDF, image, or text",
+            "Upload documents",
             type=["pdf", "png", "jpg", "jpeg", "txt"],
             accept_multiple_files=True
         )
 
         if st.button("Ingest"):
-            if files:
+            with st.spinner("Analyzing documents..."):
                 structured = ingest_files(files)
                 st.session_state["structured_data"] = structured
 
-                st.success("Documents ingested successfully")
+                for f in structured:
+                    st.session_state["enabled_files"][f["file_name"]] = True
 
-                st.subheader("📊 Extracted Structured Data")
-                for item in structured:
-                    st.markdown(f"**File:** {item['file_name']}")
-                    st.json(item)
-
-    # ---------------- Main QA ----------------
-    question = st.text_input("Ask a question about your documents")
-
-    if st.button("Ask"):
-        if not question.strip():
-            st.warning("Please enter a question.")
-            return
-
-        structured_data = st.session_state.get("structured_data", [])
-
-        # ---- STEP 2: Numerical reasoning ----
-        answer, handled = answer_numerical_question(
-            question, structured_data
-        )
-
-        if handled:
-            st.subheader("Answer")
-            st.write(answer)
-            st.caption("Answered from structured data (no LLM used)")
-            return
-
-        # ---- STEP 4: RAG retrieval ----
-        answer, docs, distances, metas = answer_question(question)
-
-        # ---- STEP 5: Conflict detection ----
-        conflict = detect_refund_conflict(docs, metas, distances)
-
-        if conflict:
-            st.subheader("⚠️ Conflict detected")
-
-            st.markdown(
-                "The documents contain conflicting information about "
-                "**gift card refundability**."
+        st.subheader("Active Documents")
+        for fname in st.session_state["enabled_files"]:
+            st.session_state["enabled_files"][fname] = st.checkbox(
+                fname,
+                value=st.session_state["enabled_files"][fname]
             )
 
-            st.markdown("### ❌ Refunds NOT available")
-            for item in conflict["negative"]:
-                st.markdown(
-                    f"- **{item['file']}**: {item['text']}"
-                )
+    if not st.session_state["structured_data"]:
+        st.info("Upload documents to begin.")
+        return
 
-            st.markdown("### ✅ Refunds AVAILABLE")
-            for item in conflict["positive"]:
-                st.markdown(
-                    f"- **{item['file']}**: {item['text']}"
-                )
+    question = st.text_input("Ask a question")
 
-            st.caption(
-                "The system cannot determine a single correct answer "
-                "because the documents disagree."
-            )
-            return  # ⬅️ important: stop here
+    if not st.button("Ask") or not question:
+        return
 
-        # ---- Normal RAG answer ----
-        st.subheader("Answer")
-        st.write(answer)
+    enabled = [
+        f for f, v in st.session_state["enabled_files"].items() if v
+    ]
 
-        best_distance = min(distances)
-        st.markdown(
-            f"**Confidence:** {confidence_label(best_distance)} "
-            f"(distance: {best_distance:.2f})"
-        )
+    history = ""
+    for q, a in st.session_state["chat_history"][-3:]:
+        history += f"Q: {q}\nA: {a}\n"
 
-        st.subheader("Sources")
-        for doc, dist, meta in zip(docs, distances, metas):
-            st.markdown(
-                f"**File:** {meta['file']} | "
-                f"Distance: {dist:.2f}\n\n"
-                f"{doc}"
-            )
+    full_question = history + question
+
+    answer, docs, distances, metas = answer_question(
+        full_question,
+        enabled_files=enabled
+    )
+
+    st.session_state["chat_history"].append((question, answer))
+
+    consensus = compute_consensus(metas, distances)
+
+    best_distance = min(distances) if distances else 1.0
+    confidence = (
+        "Not enough evidence"
+        if answer.lower() == "i don't know"
+        else f"{confidence_label(best_distance)} (distance {best_distance:.2f})"
+    )
+
+    render_answer(answer, f"**Confidence:** {confidence}")
+    render_why_answer(metas[0]["file"], distances[0])
+    render_sources(docs, distances, metas)
+
+    pdf = export_answer_pdf(
+        question,
+        answer,
+        [m["file"] for m in metas]
+    )
+
+    st.download_button(
+        "📄 Download Answer as PDF",
+        pdf,
+        file_name="kredly_answer.pdf",
+        mime="application/pdf"
+    )

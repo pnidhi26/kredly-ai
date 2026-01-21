@@ -17,44 +17,71 @@ Kredly AI is a SaaS-grad, open-source **Document Intelligence platform** built u
 
 It allows users to upload unstructured documents (PDFs, images, text) and ask natural language questions with **evidence-backed, explainable answers**.
 
-Unlike basic RAG demos, Kredly AI prioritizes:
-- correctness over fluency
-- explicit uncertainty
-- multi-document conflict detection
-
-## Key Features
-- 📄 OCR for PDFs and images
-- 🔍 Semantic search using vector embeddings
-- 🧠 Grounded question answering (RAG)
-- 📊 Confidence scoring based on semantic similarity
-- ⚠️ Conflict detection across documents
-- 🧾 Explainability (“Why this answer?”)
-- 📤 Export answers as PDF
-- 💻 Fully free and open-source (no paid APIs)
-
-=======
->>>>>>> ebe193f (Add Hugging Face Spaces config)
----
-title: Kredly AI
-emoji: 📄
-colorFrom: blue
-colorTo: purple
-sdk: docker
-app_port: 7860
-license: mit
----
-
 # Kredly AI
 ### Klaro — powered by Kredly AI Document Intelligence
-Document Intelligence using RAG with OCR, conflict detection, and confidence scoring.
 
+
+## Overview
+
+A free, open-source document intelligence system using Retrieval Augmented Generation (RAG) with OCR, conflict detection, and confidence scoring.
+
+Klaro is a AI-powered Document Intelligence platform that allows users to upload unstructured documents (PDFs, images, text) and ask natural language questions with evidence-backed, explainable answers.
+
+Unlike typical RAG solutions, Klaro App is designed for correctness, transparency, and trust, making it suitable for real enterprise use cases such as compliance, fintech, legal, and risk analysis.
+
+
+## ✨ Key Features
+
+- 📄 Multi-format document ingestion (PDF, Image, TXT)
+- 🔍 Semantic search using vector embeddings (ChromaDB)
+- 🧠 Retrieval-Augmented Generation (RAG) with strict grounding
+- 📊 Confidence scoring based on semantic distance
+- ⚠️ Automatic conflict detection across documents
+- 🧾 “Why this answer?” explainability panel
+- 📤 Export answers as PDF (enterprise-ready)
+- 🎨 SaaS-grade simple UI platform
+
+
+## 🧠 Why Kredly AI?
+Most RAG systems answer confidently even when documents:
+- contradict each other
+- lack sufficient evidence
+- contain ambiguous policies
+
+Kredly AI was built to surface uncertainty instead of hiding it.
+
+## 🏗️ Architecture Overview
+Document → OCR → Chunking → Embeddings → Vector DB → Retrieval → Prompt Injection → LLM Answer
+
+Upload Docs → OCR / Parsing → Chunking → Embeddings
+      ↓
+Vector Store (ChromaDB)
+      ↓
+User Question
+      ↓
+Retrieval → Reasoning → Conflict Detection
+      ↓
+Answer + Confidence + Sources + Explanation
+
+## 🎯 Use Cases
+- Fintech & compliance policy analysis
+- Customer support knowledge systems
+- Legal & contract review
+- Fraud & risk document comparison
+- Internal enterprise document Q&A
 
 ## Project Structure
 ```bash
 klaro-ai/
-│
+├── app.py                     # Streamlit entrypoint
+├── requirements.txt           # Python dependencies
+├── Dockerfile                 # Deployment config (Hugging Face / Docker)
+├── run.sh                     # Startup script for Spaces
+├── README.md                  # Project documentation
+
 ├── app/
 │   ├── __init__.py
+<<<<<<< HEAD
 │   ├── ui.py                  # Main UI orchestration
 │   ├── ui_components.py       # Reusable UI blocks
 │   ├── rag_pipeline.py        # Core RAG logic
@@ -124,6 +151,75 @@ source venv/bin/activate
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+│
+│   ├── ui.py   # Main UI orchestration (page flow)
+│   ├── ui_components.py # Reusable UI blocks (answer, sources explainability)
+│   ├── styles/
+│   │   └── dark.css           # Centralized dark theme + green accents
+│
+│   ├── ingestion.py           # File ingestion (PDF, OCR, text)
+│   ├── chunking.py            # Text chunking logic
+│   ├── extraction.py          # Structured data extraction (policies, numbers)
+│   ├── reasoning.py           # Rule-based / numerical reasoning
+│
+│   ├── vector_store.py        # Embedding + ChromaDB integration
+│   ├── rag_pipeline.py        # Retrieval-Augmented Generation logic
+│   ├── conflict_detection.py  # Cross-document conflict detection
+│   ├── consensus.py           # Multi-source consensus scoring
+│
+│   ├── export.py              # PDF export for answers
+│   └── utils.py               # Shared helpers (confidence labels, formatting)
+│
+├── models/
+│   └── embeddings/            # Local or cached embedding models
+│
+├── data/
+│   └── samples/               # Sample documents for testing/demo
+│
+├── scripts/
+│   ├── setup_env.sh           # Local setup helpers
+│   └── reset_index.py         # Vector DB maintenance utilities
+│
+└── venv/                      # Local virtual environment (gitignored)
+
+```
+
+## Overview
+
+
+### 🚀 Tech Stack
+- Frontend: Streamlit (custom dark theme)
+- LLM: Open-source Hugging Face models
+- Vector DB: ChromaDB
+- OCR: Tesseract
+- PDF Parsing: pdfplumber
+- Explainability: Custom scoring + attribution logic
+- Deployment: Hugging Face Spaces
+
+### Run
+Direct Use Link:
+```bash
+https://huggingface.co/spaces/pnidhi26/kredly-ai
+```
+
+Run on local system:
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+streamlit run main.py
+```
+
+### 📄 Export
+Answers can be exported as a PDF including:
+- Question
+- Answer
+- Confidence
+- Sources
+
+### 📌 Status
+Actively evolving. Built as a learning-by-doing deep dive into RAG systems done right.
+>>>>>>> 93d8e06 (Add reportlab for PDF export)
 
 ## Author
 **Prakash Nidhi Verma**
