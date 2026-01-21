@@ -32,7 +32,23 @@ Unlike basic RAG demos, Kredly AI prioritizes:
 - 📤 Export answers as PDF
 - 💻 Fully free and open-source (no paid APIs)
 
+=======
+>>>>>>> ebe193f (Add Hugging Face Spaces config)
 ---
+title: Kredly AI
+emoji: 📄
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+license: mit
+---
+
+# Kredly AI
+### Klaro — powered by Kredly AI Document Intelligence
+Document Intelligence using RAG with OCR, conflict detection, and confidence scoring.
+
+
 ## Project Structure
 ```bash
 klaro-ai/
